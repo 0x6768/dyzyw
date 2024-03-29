@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电影列表</title>
+    <!-- 引入 layui.css -->
+    <link href="//unpkg.com/layui@2.9.7/dist/css/layui.css" rel="stylesheet">
+    <style>
+        .container {
+            padding: 0 5px; /* 在左右方向上添加5像素的内边距 */
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #777;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+        .search-container input[type="text"] {
+            flex: 1;
+            max-width: 200px; /* 设置最大宽度 */
+        }
+        .search-container button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body class="container">
+    <h1>免费电影资源网-电影列表</h1>
+    <p>资源将会持续更新!!!</p>
+    
+    <p>-------------------------------</p>
+    <!-- 搜索框 -->
+    <div class="search-container">
+        <input type="text" id="searchInput" class="layui-input" style="width: auto;" placeholder="请输入电影名称">
+        <button id="searchButton" class="layui-btn">搜索</button>
+    </div>
+
+    <!-- 电影列表 -->
+    <div id="movieList" style="padding: 20px;">
+        <!-- 电影列表内容 -->
+    </div>
+
+    <!-- 分页 -->
+    <div id="page" style="text-align: center;"></div>
+
+    <!-- 底部信息 -->
+    <footer>
+        <p>版权所有 &copy; 2024 免费电影资源网</p>
+        <p>联系方式：admin@yang233.eu.org</p>
+    </footer>
+
+    <!-- 引入 layui.js -->
+    <script src="//unpkg.com/layui@2.9.7/dist/layui.js"></script>
+    <script>
+        layui.use(['laypage'], function(){
+            var laypage = layui.laypage;
+
+            // 模拟的电影数据，实际使用时可以从服务器获取
+            var movieData = [
+                { name: '罗小黑战记', info: '720P 国语中字', link: 'https://pan.huang1111.cn/s/aaRnfG' },
+                { name: '疯狂动物城', info: 'HD1080P 国语中字 [推荐]', link: 'https://pan.huang1111.cn/s/6GmQHN' },
+                { name: '熊出没·狂野大陆', info: 'HD1080P 国语中字 [推荐]', link: 'https://pan.huang1111.cn/s/L9y4U6' },
+                { name: '熊出没之重返地球', info: 'HD1080P 国语中字 [推荐]', link: 'https://pan.huang1111.cn/s/VNlbtd' },
+                { name: '熊出没之伴我”熊芯“', info: 'HD1080P 国语中字 [有水印]', link: 'https://pan.huang1111.cn/s/YG8kfA' },
+                { name: '熊出没之逆转时空', info: 'HD1080P 国语中字', link: 'spc.html' },
+                // 更多电影数据...
+            ];
+
+            // 渲染电影列表
+            function renderMovieList(currPage, keyword) {
+                var html = '';
+                var pageSize = 5; // 每页显示的电影数量
+                var filteredMovies = keyword ? movieData.filter(movie => movie.name.includes(keyword)) : movieData;
+                var startIndex = (currPage - 1) * pageSize;
+                var endIndex = Math.min(startIndex + pageSize, filteredMovies.length);
+
+                for (var i = startIndex; i < endIndex; i++) {
+                    html += '<div><a href="' + filteredMovies[i].link + '">' + filteredMovies[i].name + ' - ' + filteredMovies[i].info + '</a></div>';
+                }
+
+                document.getElementById('movieList').innerHTML = html;
+
+                // 渲染分页
+                laypage.render({
+                    elem: 'page',
+                    count: filteredMovies.length,
+                    limit: pageSize,
+                    curr: currPage,
+                    jump: function(obj, first){
+                        if(!first){
+                            renderMovieList(obj.curr, keyword);
+                        }
+                    }
+                });
+            }
+
+            // 默认渲染第一页
+            renderMovieList(1);
+
+            // 搜索按钮点击事件
+            document.getElementById('searchButton').addEventListener('click', function() {
+                var keyword = document.getElementById('searchInput').value.trim();
+                renderMovieList(1, keyword);
+            });
+        });
+    </script>
+</body>
+</html>

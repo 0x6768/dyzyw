@@ -73,7 +73,7 @@
             // 渲染电影列表
             function renderMovieList(currPage, keyword) {
                 var html = '';
-                var pageSize = 5; // 每页显示的电影数量
+                var pageSize = 10; // 每页显示的电影数量
                 var filteredMovies = keyword ? movieData.filter(movie => movie.name.includes(keyword)) : movieData;
                 var startIndex = (currPage - 1) * pageSize;
                 var endIndex = Math.min(startIndex + pageSize, filteredMovies.length);
